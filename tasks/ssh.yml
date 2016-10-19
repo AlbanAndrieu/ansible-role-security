@@ -4,6 +4,7 @@
   when: ansible_distribution == 'Debian'
   with_items:
     - ssh
+  become: yes
 
 - name: Update SSH configuration to be more secure.
   lineinfile:
@@ -29,6 +30,7 @@
     - regexp: "^X11Forwarding"
       line: "X11Forwarding {{ security_ssh_x11_forwarding }}"
   notify: restart ssh
+  become: yes
 
 - name: Add configured user accounts to passwordless sudoers.
   lineinfile:
@@ -39,6 +41,7 @@
     validate: 'visudo -cf %s'
   with_items: "{{ security_sudoers_passwordless }}"
   when: security_sudoers_passwordless | length > 0
+  become: yes
 
 - name: Add configured user accounts to passworded sudoers.
   lineinfile:
@@ -49,3 +52,4 @@
     validate: 'visudo -cf %s'
   with_items: "{{ security_sudoers_passworded }}"
   when: security_sudoers_passworded | length > 0
+  become: yes
