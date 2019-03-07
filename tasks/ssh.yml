@@ -4,7 +4,7 @@
   when: ansible_distribution == 'Debian'
   with_items:
     - ssh
-  become: yes
+  become: true
 
 - name: Update SSH configuration to be more secure.
   lineinfile:
@@ -30,7 +30,7 @@
     - regexp: "^X11Forwarding"
       line: "X11Forwarding {{ security_ssh_x11_forwarding }}"
   notify: restart ssh
-  become: yes
+  become: true
 
 #https://codedump.io/share/54aDGnjTvL3J/1/algorithm-negotiation-fail-ssh-in-jenkins
 #KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1
@@ -44,7 +44,7 @@
     validate: 'visudo -cf %s'
   with_items: "{{ security_sudoers_passwordless }}"
   when: security_sudoers_passwordless | length > 0
-  become: yes
+  become: true
 
 - name: Add configured user accounts to passworded sudoers.
   lineinfile:
@@ -55,4 +55,4 @@
     validate: 'visudo -cf %s'
   with_items: "{{ security_sudoers_passworded }}"
   when: security_sudoers_passworded | length > 0
-  become: yes
+  become: true
